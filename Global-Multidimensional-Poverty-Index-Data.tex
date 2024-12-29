@@ -1,0 +1,360 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Global Multidimensional Poverty Index Data},
+  pdfauthor={Elvira Khwatenge},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Global Multidimensional Poverty Index Data}
+\author{Elvira Khwatenge}
+\date{2024-12-29}
+
+\begin{document}
+\maketitle
+
+\hypertarget{introduction}{%
+\subsection{Introduction}\label{introduction}}
+
+This report analyzes the Global Multidimensional Poverty Index (MPI)
+data for various countries and regions around the world.
+
+\hypertarget{data-loading-and-preparation}{%
+\subsection{Data Loading and
+Preparation}\label{data-loading-and-preparation}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(dplyr)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'dplyr'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(ggplot2)}
+\FunctionTok{library}\NormalTok{(tidyr)}
+\FunctionTok{library}\NormalTok{(knitr)}
+\FunctionTok{library}\NormalTok{(scales)}
+\end{Highlighting}
+\end{Shaded}
+
+Load the dataset
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"hdx\_hapi\_poverty\_rate\_global.csv"}\NormalTok{, }\AttributeTok{stringsAsFactors =} \ConstantTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Clean the dataset
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data\_cleaned }\OtherTok{\textless{}{-}}\NormalTok{ data[}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, ]}
+\FunctionTok{colnames}\NormalTok{(data\_cleaned) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}location\_code\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}has\_hrp\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}in\_gho\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}provider\_admin1\_name\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}admin1\_code\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}admin1\_name\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}mpi\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}headcount\_ratio\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}intensity\_of\_deprivation\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}vulnerable\_to\_poverty\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}in\_severe\_poverty\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}reference\_period\_start\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}reference\_period\_end\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Convert numeric columns to appropriate data types
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{numeric\_columns }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}mpi\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}headcount\_ratio\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}intensity\_of\_deprivation\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}vulnerable\_to\_poverty\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}in\_severe\_poverty\textquotesingle{}}\NormalTok{)}
+\NormalTok{data\_cleaned[numeric\_columns] }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(data\_cleaned[numeric\_columns], as.numeric)}
+\end{Highlighting}
+\end{Shaded}
+
+Convert date columns to Date format
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data\_cleaned}\SpecialCharTok{$}\NormalTok{reference\_period\_start }\OtherTok{\textless{}{-}} \FunctionTok{as.Date}\NormalTok{(data\_cleaned}\SpecialCharTok{$}\NormalTok{reference\_period\_start)}
+\NormalTok{data\_cleaned}\SpecialCharTok{$}\NormalTok{reference\_period\_end }\OtherTok{\textless{}{-}} \FunctionTok{as.Date}\NormalTok{(data\_cleaned}\SpecialCharTok{$}\NormalTok{reference\_period\_end)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{analysis}{%
+\subsection{Analysis}\label{analysis}}
+
+\hypertarget{summary-statistics}{%
+\subsubsection{Summary Statistics}\label{summary-statistics}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{summary\_statistics }\OtherTok{\textless{}{-}} \FunctionTok{summary}\NormalTok{(data\_cleaned[numeric\_columns])}
+\FunctionTok{kable}\NormalTok{(summary\_statistics)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.0303}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1515}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1616}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.2525}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.2222}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1818}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+mpi
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+headcount\_ratio
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+intensity\_of\_deprivation
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+vulnerable\_to\_poverty
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+in\_severe\_poverty
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+& Min. :0.0000 & Min. : 0.000 & Min. : 0.00 & Min. : 0.000 & Min. :
+0.0000 \\
+& 1st Qu.:0.0244 & 1st Qu.: 6.168 & 1st Qu.:39.60 & 1st Qu.: 7.924 & 1st
+Qu.: 0.8403 \\
+& Median :0.1114 & Median :25.771 & Median :44.26 & Median :15.203 &
+Median : 7.2929 \\
+& Mean :0.1772 & Mean :34.124 & Mean :45.45 & Mean :15.284 & Mean
+:17.9962 \\
+& 3rd Qu.:0.3021 & 3rd Qu.:60.373 & 3rd Qu.:50.65 & 3rd Qu.:21.586 & 3rd
+Qu.:30.3959 \\
+& Max. :0.7384 & Max. :99.492 & Max. :75.89 & Max. :50.182 & Max.
+:94.1871 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{text}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## function (x, ...) 
+## UseMethod("text")
+## <bytecode: 0x000001e841c15408>
+## <environment: namespace:graphics>
+\end{verbatim}
+
+\hypertarget{top-10-countries-with-highest-mpi}{%
+\subsubsection{Top 10 Countries with Highest
+MPI}\label{top-10-countries-with-highest-mpi}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{country\_summary }\OtherTok{\textless{}{-}}\NormalTok{ data\_cleaned }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{group\_by}\NormalTok{(location\_code) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{summarise}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\FunctionTok{all\_of}\NormalTok{(numeric\_columns), mean, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: There was 1 warning in `summarise()`.
+## i In argument: `across(all_of(numeric_columns), mean, na.rm = TRUE)`.
+## i In group 1: `location_code = "AFG"`.
+## Caused by warning:
+## ! The `...` argument of `across()` is deprecated as of dplyr 1.1.0.
+## Supply arguments directly to `.fns` through an anonymous function instead.
+## 
+##   # Previously
+##   across(a:b, mean, na.rm = TRUE)
+## 
+##   # Now
+##   across(a:b, \(x) mean(x, na.rm = TRUE))
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{top\_10\_mpi }\OtherTok{\textless{}{-}}\NormalTok{ country\_summary }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(mpi)) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{head}\NormalTok{(}\DecValTok{10}\NormalTok{)}
+\FunctionTok{kable}\NormalTok{(top\_10\_mpi)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1333}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.0952}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1524}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.2381}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.2095}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1714}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+location\_code
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+mpi
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+headcount\_ratio
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+intensity\_of\_deprivation
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+vulnerable\_to\_poverty
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+in\_severe\_poverty
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+TCD & 0.6016106 & 91.17772 & 65.43287 & 6.021026 & 75.62268 \\
+NER & 0.5840333 & 86.73578 & 66.26881 & 6.285494 & 73.88559 \\
+CAF & 0.4812875 & 81.79876 & 57.81771 & 12.028612 & 56.96986 \\
+BFA & 0.4523393 & 77.59735 & 57.07156 & 10.758389 & 54.13713 \\
+MLI & 0.4380071 & 76.17523 & 56.35877 & 11.521079 & 54.06448 \\
+MDG & 0.4156371 & 73.61946 & 55.69504 & 13.203784 & 51.15671 \\
+BDI & 0.3993667 & 73.53615 & 53.53338 & 16.032307 & 44.61298 \\
+GIN & 0.3915037 & 68.89243 & 55.52337 & 14.826467 & 46.19869 \\
+COD & 0.3903879 & 73.83552 & 52.37478 & 16.288131 & 45.14210 \\
+MOZ & 0.3785306 & 66.33908 & 54.61580 & 14.225853 & 44.76680 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(top\_10\_mpi, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =} \FunctionTok{reorder}\NormalTok{(location\_code, mpi), }\AttributeTok{y =}\NormalTok{ mpi)) }\SpecialCharTok{+}
+\FunctionTok{geom\_bar}\NormalTok{(}\AttributeTok{stat =} \StringTok{"identity"}\NormalTok{, }\AttributeTok{fill =} \StringTok{"steelblue"}\NormalTok{) }\SpecialCharTok{+}
+\FunctionTok{coord\_flip}\NormalTok{() }\SpecialCharTok{+}
+\FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Top 10 Countries with Highest MPI"}\NormalTok{,}
+\AttributeTok{x =} \StringTok{"Country Code"}\NormalTok{,}
+\AttributeTok{y =} \StringTok{"Multidimensional Poverty Index (MPI)"}\NormalTok{) }\SpecialCharTok{+}
+\FunctionTok{theme\_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Global-Multidimensional-Poverty-Index-Data_files/figure-latex/unnamed-chunk-7-1.pdf}
+\#\# Conclusion
+
+This report provides an overview of the Global Multidimensional Poverty
+Index data. Further analysis can be conducted to explore regional
+trends, temporal changes, and correlations between different poverty
+indicators.
+
+\end{document}

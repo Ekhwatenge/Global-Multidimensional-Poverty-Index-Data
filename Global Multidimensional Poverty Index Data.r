@@ -4,6 +4,8 @@ library(ggplot2)
 library(tidyr)
 library(knitr)
 library(scales)
+library(sf)
+library(cluster)
 
 # Load the dataset
 data <- read.csv('hdx_hapi_poverty_rate_global.csv', stringsAsFactors = FALSE)
@@ -103,6 +105,101 @@ report <- capture.output({
   cat("\n4. Top 20 Regions with Highest MPI\n")
   print(kable(top_20_regions))
 })
+
+## Regional Disparities Analysis
+
+# Calculate summary statistics by region
+regional_summary <- data_cleaned %>%
+  group_by(admin1_name) %>%
+  summarise(
+    mean_mpi = mean(mpi, na.rm = TRUE),
+    sd_mpi = sd(mpi, na.rm = TRUE),
+    min_mpi = min(mpi, na.rm = TRUE),
+    max_mpi = max(mpi, na.rm = TRUE)
+  )
+
+# Perform one-way ANOVA
+anova_result <- aov(mpi ~ admin1_name, data = data_cleaned)
+summary(anova_result)
+
+# Create a choropleth map (requires shapefile data)
+# shapefile <- st_read("path_to_shapefile.shp")
+# map_data <- left_join(shapefile, regional_summary, by = c("admin1_name" = "admin1_name"))
+# ggplot(map_data) +
+#   geom_sf(aes(fill = mean_mpi)) +
+#   scale_fill_viridis_c() +
+#   theme_minimal() +
+#   labs(title = "Regional MPI Disparities", fill = "Mean MPI")
+
+## Temporal Trend Analysis
+
+# Calculate average annual rate of change
+temporal_trends <- data_cleaned %>%
+  group_by(location_code, admin1_name) %>%
+  arrange(reference_period_start) %>%
+  summarise(
+    start_mpi = first(mpi),
+    end_mpi = last(mpi),
+    years = as.numeric(difftime(last(reference_period_end), first(reference_period_start), units = "days")) / 365,
+    avg_annual_change = (end_mpi - start_mpi) / years
+  )
+
+# Visualize trends
+ggplot(data_cleaned, aes(x = reference_period_start, y = mpi, color = admin1_name)) +
+  geom_line() +
+  theme_minimal() +
+  labs(title = "MPI Trends Over Time", x = "Year", y = "MPI", color = "Region")
+
+## Decomposition Analysis
+
+# Assuming the dataset includes individual indicators that make up the MPI
+indicators <- c("indicator1", "indicator2", "indicator3") # Replace with actual indicator names
+
+data_cleaned %>%
+  gather(key = "indicator", value = "value", indicators) %>%
+  group_by(admin1_name, indicator) %>%
+  summarise(mean_value = mean(value, na.rm = TRUE)) %>%
+  ggplot(aes(x = admin1_name, y = mean_value, fill = indicator)) +
+  geom_bar(stat = "identity", position = "stack") +
+  theme_minimal() +
+  labs(title = "MPI Composition by Region", x = "Region", y = "Contribution to MPI")
+
+## Correlation with Development Indicators
+
+# Assuming additional development indicators are available in the dataset
+development_indicators <- c("gdp_per_capita", "education_index", "health_index") # Replace with actual indicator names
+
+correlation_matrix <- cor(data_cleaned[c("mpi", development_indicators)], use = "complete.obs")
+corrplot::corrplot(correlation_matrix, method = "circle")
+
+## Cluster Analysis
+
+# Perform k-means clustering
+set.seed(123)
+kmeans_result <- kmeans(data_cleaned[c("mpi", "headcount_ratio", "intensity_of_deprivation")], centers = 5)
+
+# Add cluster assignments to the dataset
+data_cleaned$cluster <- kmeans_result$cluster
+
+# Visualize clusters
+ggplot(data_cleaned, aes(x = headcount_ratio, y = intensity_of_deprivation, color = factor(cluster))) +
+  geom_point() +
+  theme_minimal() +
+  labs(title = "Cluster Analysis of Poverty Profiles", color = "Cluster")
+
+## Inequality Analysis
+
+# Calculate Gini coefficient for MPI within each region
+gini_coefficients <- data_cleaned %>%
+  group_by(admin1_name) %>%
+  summarise(gini_mpi = ineq::Gini(mpi))
+
+# Create Lorenz curve
+ggplot(data_cleaned, aes(x = cumsum(mpi) / sum(mpi), y = seq_along(mpi) / length(mpi))) +
+  geom_line() +
+  geom_abline(linetype = "dashed") +
+  theme_minimal() +
+  labs(title = "Lorenz Curve of MPI", x = "Cumulative Share of MPI", y = "Cumulative Share of Population")
 
 # Save report to a text file
 writeLines(report, "poverty_analysis_report.txt")

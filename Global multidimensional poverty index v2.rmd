@@ -1,0 +1,195 @@
+---
+title: "Global multidimensional poverty index"
+author: "Elvira Khwatenge"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+
+## Introduction
+
+An analysis of the Global Multidimensional Poverty Index (MPI) data for various countries and regions around the world.
+
+## Data Loading and Preparation
+```{r}
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(knitr)
+library(scales)
+library(sf)
+library(cluster)
+```
+
+Load the dataset
+```{r}
+data <- read.csv('hdx_hapi_poverty_rate_global.csv', stringsAsFactors = FALSE)
+```
+Clean the dataset
+```{r}
+data_cleaned <- data[-1, ]
+colnames(data_cleaned) <- c('location_code', 'has_hrp', 'in_gho', 'provider_admin1_name', 'admin1_code', 'admin1_name', 'mpi', 'headcount_ratio', 'intensity_of_deprivation', 'vulnerable_to_poverty', 'in_severe_poverty', 'reference_period_start', 'reference_period_end')
+```
+
+Convert numeric columns to appropriate data types
+```{r}
+numeric_columns <- c('mpi', 'headcount_ratio', 'intensity_of_deprivation', 'vulnerable_to_poverty', 'in_severe_poverty')
+data_cleaned[numeric_columns] <- lapply(data_cleaned[numeric_columns], as.numeric)
+```
+
+Convert date columns to Date format
+```{r}
+data_cleaned$reference_period_start <- as.Date(data_cleaned$reference_period_start)
+data_cleaned$reference_period_end <- as.Date(data_cleaned$reference_period_end)
+```
+
+## Analysis
+
+### Summary Statistics
+
+```{r}
+summary_statistics <- summary(data_cleaned[numeric_columns])
+kable(summary_statistics)
+```
+
+### Top 10 Countries with Highest MPI
+
+```{r}
+country_summary <- data_cleaned %>%
+group_by(location_code) %>%
+summarise(across(all_of(numeric_columns), mean, na.rm = TRUE))
+top_10_mpi <- country_summary %>%
+arrange(desc(mpi)) %>%
+head(10)
+kable(top_10_mpi)
+ggplot(top_10_mpi, aes(x = reorder(location_code, mpi), y = mpi)) +
+geom_bar(stat = "identity", fill = "steelblue") +
+coord_flip() +
+labs(title = "Top 10 Countries with Highest MPI",
+x = "Country Code",
+y = "Multidimensional Poverty Index (MPI)") +
+theme_minimal()
+```
+
+### Correlation Analysis
+```{r}
+correlation_matrix <- cor(data_cleaned[numeric_columns], use = "complete.obs")
+kable(correlation_matrix)
+ggplot(data = reshape2::melt(correlation_matrix), aes(x = Var1, y = Var2, fill = value)) +
+geom_tile() +
+geom_text(aes(label = round(value, 2)), color = "white", size = 3) +
+scale_fill_gradient2(low = "blue", high = "red", mid = "white", midpoint = 0) +
+theme_minimal() +
+theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+labs(title = "Correlation Heatmap of Poverty Indicators")
+```
+
+### Time Series Analysis
+
+```{r}
+time_series_data <- data_cleaned %>%
+group_by(reference_period_start) %>%
+summarise(across(all_of(numeric_columns), mean, na.rm = TRUE))
+ggplot(time_series_data, aes(x = reference_period_start, y = mpi)) +
+geom_line() +
+geom_point() +
+labs(title = "Global MPI Trend Over Time",
+x = "Year",
+y = "Average Multidimensional Poverty Index (MPI)") +
+theme_minimal()
+```
+
+### Regional Analysis
+
+```{r}
+regional_summary <- data_cleaned %>%
+group_by(admin1_name) %>%
+summarise(across(all_of(numeric_columns), mean, na.rm = TRUE)) %>%
+arrange(desc(mpi))
+top_20_regions <- head(regional_summary, 20)
+kable(top_20_regions)
+ggplot(top_20_regions, aes(x = reorder(admin1_name, mpi), y = mpi)) +
+geom_bar(stat = "identity", fill = "darkgreen") +
+coord_flip() +
+labs(title = "Top 20 Regions with Highest MPI",
+x = "Region",
+y = "Multidimensional Poverty Index (MPI)") +
+theme_minimal() +
+theme(axis.text.y = element_text(size = 8))
+```
+
+## Additional Analyses
+
+### Regional Disparities Analysis
+
+```{r}
+regional_summary <- data_cleaned %>%
+group_by(admin1_name) %>%
+summarise(
+mean_mpi = mean(mpi, na.rm = TRUE),
+sd_mpi = sd(mpi, na.rm = TRUE),
+min_mpi = min(mpi, na.rm = TRUE),
+max_mpi = max(mpi, na.rm = TRUE)
+)
+anova_result <- aov(mpi ~ admin1_name, data = data_cleaned)
+summary(anova_result)
+```
+
+### Temporal Trend Analysis
+
+```{r}
+temporal_trends <- data_cleaned %>%
+group_by(location_code, admin1_name) %>%
+arrange(reference_period_start) %>%
+summarise(
+start_mpi = first(mpi),
+end_mpi = last(mpi),
+years = as.numeric(difftime(last(reference_period_end), first(reference_period_start), units = "days")) / 365,
+avg_annual_change = (end_mpi - start_mpi) / years
+)
+ggplot(data_cleaned, aes(x = reference_period_start, y = mpi, color = admin1_name)) +
+geom_line() +
+theme_minimal() +
+labs(title = "MPI Trends Over Time", x = "Year", y = "MPI", color = "Region")
+```
+
+### Decomposition Analysis
+```{r}
+indicators <- c("mpi", "headcount_ratio", "intensity_of_deprivation")
+data_cleaned %>%
+gather(key = "indicator", value = "value", indicators) %>%
+group_by(admin1_name, indicator) %>%
+summarise(mean_value = mean(value, na.rm = TRUE)) %>%
+ggplot(aes(x = admin1_name, y = mean_value, fill = indicator)) +
+geom_bar(stat = "identity", position = "stack") +
+theme_minimal() +
+labs(title = "MPI Composition by Region", x = "Region", y = "Contribution to MPI")
+```
+
+### Cluster Analysis
+
+```{R}
+set.seed(123)
+kmeans_result <- kmeans(data_cleaned[c("mpi", "headcount_ratio", "intensity_of_deprivation")], centers = 5)
+data_cleaned$cluster <- kmeans_result$cluster
+ggplot(data_cleaned, aes(x = headcount_ratio, y = intensity_of_deprivation, color = factor(cluster))) +
+geom_point() +
+theme_minimal() +
+labs(title = "Cluster Analysis of Poverty Profiles", color = "Cluster")
+```
+
+### Inequality Analysis
+```{r}
+gini_coefficients <- data_cleaned %>%
+group_by(admin1_name) %>%
+summarise(gini_mpi = ineq::Gini(mpi))
+ggplot(data_cleaned, aes(x = cumsum(mpi) / sum(mpi), y = seq_along(mpi) / length(mpi))) +
+geom_line() +
+geom_abline(linetype = "dashed") +
+theme_minimal() +
+labs(title = "Lorenz Curve of MPI", x = "Cumulative Share of MPI", y = "Cumulative Share of Population")
+```
+
+## Conclusion
+
+This is an analysis of the Global Multidimensional Poverty Index data revealing variations in poverty levels across countries and regions, as well as over time..
